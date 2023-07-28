@@ -6,11 +6,11 @@
 ### Comercial: Júlia Garcia
 ### Projetos: Bruno Gondim Toledo
 
-## Exploratória
+## Exploratória:
 ### Felipe Adriano
 ### Arthur Gonçalves de Souza
 
-## Métodos 2
+## Métodos 2:
 ### Júlia Garcia
 ### Arthur Rodrigues
 
