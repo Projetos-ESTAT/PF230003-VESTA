@@ -1,5 +1,4 @@
-source("C:/Users/Júlia G/Documents/Eu/packages.R")
-source("C:/Users/Júlia G/Documents/ESTAT/Projetos/padraograficos.R")
+source("rdocs/source/packages.R")
 
 # ---------------------------------------------------------------------------- #
 
@@ -25,7 +24,9 @@ source("C:/Users/Júlia G/Documents/ESTAT/Projetos/padraograficos.R")
 # ---------------------------------------------------------------------------- #
 
 # Importar banco
-df  <- read_xlsx("C:/Users/Júlia G/Documents/ESTAT/Projetos/PF23003 - Projeto Vesta/df.xlsx")
+#df  <- read_xlsx("C:/Users/Júlia G/Documents/ESTAT/Projetos/PF23003 - Projeto Vesta/df.xlsx")
+df <- read_excel("banco/df.xlsx")
+
 
 # Analisar gruppos a serem estudados
 table(df$`GRUPO MÁSCARA`)
