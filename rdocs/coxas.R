@@ -81,6 +81,8 @@ df$`Peso (em Kg)`=as.numeric(df$`Peso (em Kg)`)
 df$`Altura (em cm)`=as.numeric(df$`Altura (em cm)`)
 df$IMC= as.numeric(df$IMC)
 
+p_load(compareGroups)
+df$`GRUPO MÁSCARA` <- factor(df$`GRUPO MÁSCARA`)
 #Fazendo os teste de comparação entre os grupos
 result=compareGroups(`GRUPO MÁSCARA` ~`Idade` + `Sexo`+ `Escolaridade`+ 
                 `Há quanto tempo trabalha no 'Local de trabalho 1'?` +
