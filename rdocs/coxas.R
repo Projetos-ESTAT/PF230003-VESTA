@@ -84,7 +84,7 @@ df$IMC= as.numeric(df$IMC)
 p_load(compareGroups)
 df$`GRUPO MÁSCARA` <- factor(df$`GRUPO MÁSCARA`)
 #Fazendo os teste de comparação entre os grupos
-result=compareGroups(`GRUPO MÁSCARA` ~`Idade` + `Sexo`+ `Escolaridade`+ 
+result=compareGroups(`GRUPO MÁSCARA` ~`Idade` + `Sexo`+
                 `Há quanto tempo trabalha no 'Local de trabalho 1'?` +
                 `Estado em que nasceu` +`Estado civil`+ `Escolaridade`+
                 `Raça declarada` + `Qual sua carga horária de trabalho semanal no 'Local de trabalho 1'?`
