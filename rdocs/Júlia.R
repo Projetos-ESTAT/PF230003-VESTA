@@ -103,6 +103,7 @@ shapiro.test(data_j$`JSS- ESCORE ''Demanda psicológica'':`)
 # Lista de todas as variáveis exceto 'GRUPO MÁSCARA'
 other_variables <- setdiff(names(data_j), "GRUPO MÁSCARA")
 
+#result <- list()
 # Loop para realizar os testes estatísticos
 for (variable_name in other_variables) {
   variable <- data_j[[variable_name]]
@@ -132,3 +133,59 @@ for (variable_name in other_variables) {
 }
 
 table(data_j$`GRUPO MÁSCARA` ,data_j$`Tomou a vacina contra a gripe (este ano)? (A2)`)
+
+data_j$`GRUPO MÁSCARA`
+
+# Removendo colunas inúteis
+data_j[,4] <- NULL
+data_j[,14] <- NULL
+
+# Transformando em numérico o que não está, mas deveria
+data_j[,13]
+data_j$`Qual foi o percentual de uso da máscara durante os plantões?  (Inserir número de 0 a 100)- (A1)` <- as.numeric(data_j$`Qual foi o percentual de uso da máscara durante os plantões?  (Inserir número de 0 a 100)- (A1)`)
+
+data_j[,24]
+data_j$`Qual foi o percentual de uso da máscara durante os plantões?  (Inserir número de 0 a 100) - (A2)` <- as.numeric(data_j$`Qual foi o percentual de uso da máscara durante os plantões?  (Inserir número de 0 a 100) - (A2)`)
+
+data_j[,36]
+data_j$`EUROQOL (Utilidade)` <- as.numeric(data_j$`EUROQOL (Utilidade)`)
+
+numericas <- data_j %>%
+  select_if(is.numeric)
+numericas$`GRUPO MÁSCARA` <- data_j$`GRUPO MÁSCARA`
+
+categoricas <- data_j %>%
+  select_if(~ !is.numeric(.))
+
+# Criando as tabelas de contingência para as variáveis categóricas ----
+
+# Criar uma lista para armazenar as tabelas de contingência
+contingency_tables <- list()
+
+# Colunas a serem analisadas (exceto 'GRUPO MÁSCARA')
+columns_to_analyze <- colnames(categoricas)[-1]
+
+# Loop pelas colunas e criar tabelas de contingência
+for (col in columns_to_analyze) {
+  contingency_table <- categoricas %>%
+    count(`GRUPO MÁSCARA`, {{col}}) %>%
+    spread(`GRUPO MÁSCARA`, n, fill = 0) %>%
+    mutate(Total = `1` + `2`)
+  
+  contingency_tables[[col]] <- contingency_table
+}
+
+contingency_tables
+
+# Criando a tabela de medianas para as variáveis numéricas ----
+
+colunas_numericas <- numericas %>%
+  select(-`GRUPO MÁSCARA`) %>%
+  select(where(is.numeric))
+
+medianas_por_grupo <- numericas %>%
+  select(`GRUPO MÁSCARA`, everything()) %>%
+  group_by(`GRUPO MÁSCARA`) %>%
+  summarise(across(where(is.numeric), median, na.rm = TRUE))
+
+medianas_por_grupo
