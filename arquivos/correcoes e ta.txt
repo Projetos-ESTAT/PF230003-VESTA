@@ -1,0 +1,11 @@
+-------
+Correções:
+
+1º e 3º quartil + mediana
+
+analise desfecho covid 19 - retirar os que tiveram resultados ausentes
+
+------
+T.A.:
+analises multivariadas - multivariada :> avaliaçãoo dos desfechos agregados e  separados
+regressão logística - poisson
