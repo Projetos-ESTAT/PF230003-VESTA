@@ -1,4 +1,5 @@
 source("rdocs/source/packages.R")
+p_load(tab)
 
 # ---------------------------------------------------------------------------- #
 
@@ -34,21 +35,23 @@ banco3 <- banco2 %>% filter(!is.na(banco2$`Desfecho positivo (COVID-19) durante 
 sum(is.na(banco3$`Desfecho positivo (COVID-19) durante o acompanhamento?`)) #nenhum NA
 sum(is.na(banco3$`Desfecho positivo (Influenza) durante o acompanhamento?`)) #nenhum NA
 
-banco3$Positivo <- ifelse(banco3$`Desfecho positivo (Influenza) durante o acompanhamento?` == "Não" & banco3$`Desfecho positivo (Influenza) durante o acompanhamento?` == "Não", 0,1)
+banco3$Positivo <- ifelse(banco3$`Desfecho positivo (Influenza) durante o acompanhamento?` == "Não" & banco3$`Desfecho positivo (COVID-19) durante o acompanhamento?` == "Não", 0,1)
 table(banco3$Positivo)
 
 #Modelo original
+banco3$`Qual sua carga horária de trabalho semanal no 'Local de trabalho 1'?` <- as.numeric(ifelse(banco3$`Qual sua carga horária de trabalho semanal no 'Local de trabalho 1'?`=="40h",40,
+                                                                                           banco3$`Qual sua carga horária de trabalho semanal no 'Local de trabalho 1'?`))
 
 
 #Banco dos positivos
 bancoPos <- banco3 %>% filter(Positivo==1)
-
 
 modelo1 <- glm(Positivo ~ `GRUPO MÁSCARA`,family = "binomial", data=banco3)
 summary(modelo1)
 
 #modelo 2
 bancomod2 <- banco3 %>% select(Positivo,2,11,32,34,36,Sexo,Idade)
+
 for (i in 1:6){
   print(table(bancomod2[i+1]))
 }
