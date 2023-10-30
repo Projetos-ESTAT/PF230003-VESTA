@@ -13,10 +13,11 @@ source("rdocs/source/packages.R")
 #
 
 # ---------------------------------------------------------------------------- #
-banco <- read_xlsx("banco/df.xlsx",sheet = 1)
+banco <- read_xlsx("banco/df.xlsx",sheet = 1) %>%
+  mutate_all(tolower)
 
 #Quem n participou
-banco2 <- banco %>% filter(!`GRUPO MÁSCARA` %in% c(1,2))
+banco2 <- banco %>% filter(!`GRUPO MÁSCARA` %in% c(1,2)) 
 table(banco2$Situação)
 
 #Quem participou
@@ -34,26 +35,26 @@ banco3 <- banco2 %>% filter(!is.na(banco2$`Desfecho positivo (COVID-19) durante 
 sum(is.na(banco3$`Desfecho positivo (COVID-19) durante o acompanhamento?`)) #nenhum NA
 sum(is.na(banco3$`Desfecho positivo (Influenza) durante o acompanhamento?`)) #nenhum NA
 
-banco3$Positivo <- ifelse(banco3$`Desfecho positivo (Influenza) durante o acompanhamento?` == "Não" & banco3$`Desfecho positivo (Influenza) durante o acompanhamento?` == "Não", 0,1)
+banco3$Positivo <- ifelse(banco3$`Desfecho positivo (Influenza) durante o acompanhamento?` == "não" & banco3$`Desfecho positivo (COVID-19) durante o acompanhamento?` == "não", 0,1)
 table(banco3$Positivo)
 
 #Modelo original
 
-
 #Banco dos positivos
 bancoPos <- banco3 %>% filter(Positivo==1)
-
 
 modelo1 <- glm(Positivo ~ `GRUPO MÁSCARA`,family = "binomial", data=banco3)
 summary(modelo1)
 
 #modelo 2
-bancomod2 <- banco3 %>% select(Positivo,2,11,32,34,36,Sexo,Idade)
+bancomod2 <- banco3 %>% select(Positivo,2,32,34,36,Sexo,Idade)
 for (i in 1:6){
   print(table(bancomod2[i+1]))
 }
 modelo2 <- glm(Positivo ~. ,family = "binomial", data=bancomod2)
 summary(modelo2)
+cv.glm(na.omit(bancomod2),modelo2)
+
 
 #modelo 3
 bancomod3 <- banco3 %>% dplyr::select(Positivo,2,11,32,36,Sexo,Idade) %>% na.omit()
