@@ -50,7 +50,7 @@ modelo1 <- glm(Positivo ~ `GRUPO MÁSCARA`,family = "binomial", data=banco3)
 summary(modelo1)
 
 #modelo 2
-bancomod2 <- banco3 %>% select(Positivo,2,11,32,34,36,Sexo,Idade)
+bancomod2 <- banco3 %>% dplyr::select(Positivo,2,11,32,34,36,Sexo,Idade) %>% na.omit()
 
 for (i in 1:6){
   print(table(bancomod2[i+1]))
@@ -88,6 +88,31 @@ pacman::p_load("readxl", "dplyr", "purrr",
                "plotROC", "tibble", "reticulate", "glmtoolbox",
                "survey", "MASS", "caret")
 
+#modelo 2
+
+roc(bancomod2$Positivo, predict(modelo2, type = "response"),
+    percent=TRUE,
+    col = "red",
+    print.auc = TRUE,
+    plot=T,
+    print.thres=T)
+
+a <- roc(bancomod2$Positivo, predict(modelo2, type = "response"),
+    percent=TRUE,
+    col = "red",
+    print.auc = TRUE,
+    plot=T,
+    print.thres=T)$threshold
+
+print(a[a>0.08&a<0.1])
+
+conf_mat <- confusionMatrix(factor(as.numeric(predict(modelo2, type = "response")>=0.09863807)),
+                            factor(bancomod2$Positivo), positive = "1"); conf_mat$byClass[c("Sensitivity", "Specificity")]
+
+conf_mat$table
+
+
+
 #modelo 3
 roc(bancomod3$Positivo, predict(modelo3, type = "response"),
     percent=TRUE,
@@ -96,16 +121,18 @@ roc(bancomod3$Positivo, predict(modelo3, type = "response"),
     plot=T,
     print.thres=T)
 
-conf_mat <- confusionMatrix(factor(as.numeric(predict(modelo3, type = "response")>=0.1)),
-                            factor(bancomod3$Positivo), positive = "1")
-conf_mat$table
-conf_mat$byClass[c("Sensitivity", "Specificity")]
+roc(bancomod3$Positivo, predict(modelo3, type = "response"),
+    percent=TRUE,
+    col = "red",
+    print.auc = TRUE,
+    plot=T,
+    print.thres=T)$threshold
 
+conf_mat <- confusionMatrix(factor(as.numeric(predict(modelo3, type = "response")>=0.09654144)),
+                            factor(bancomod3$Positivo), positive = "1"); conf_mat$byClass[c("Sensitivity", "Specificity")]
 
-conf_mat <- confusionMatrix(factor(as.numeric(predict(modelo3, type = "response")>=0.5)),
-                            factor(bancomod3$Positivo), positive = "1")
 conf_mat$table
-conf_mat$byClass[c("Sensitivity", "Specificity")]
+
 
 
 #modelo 4
@@ -116,17 +143,17 @@ roc(bancomod4$Positivo, predict(modelo4, type = "response"),
     plot=T,
     print.thres=T)
 
-conf_mat <- confusionMatrix(factor(as.numeric(predict(modelo4, type = "response")>=0.1)),
-                            factor(bancomod4$Positivo), positive = "1")
+roc(bancomod4$Positivo, predict(modelo4, type = "response"),
+    percent=TRUE,
+    col = "red",
+    print.auc = TRUE,
+    plot=T,
+    print.thres=T)$thresholds
+
+conf_mat <- confusionMatrix(factor(as.numeric(predict(modelo4, type = "response")>=0.09550434)),
+                            factor(bancomod4$Positivo), positive = "1"); conf_mat$byClass[c("Sensitivity", "Specificity")]
+
 conf_mat$table
-conf_mat$byClass[c("Sensitivity", "Specificity")]
-
-
-conf_mat <- confusionMatrix(factor(as.numeric(predict(modelo4, type = "response")>=0.5)),
-                            factor(bancomod4$Positivo), positive = "1")
-conf_mat$table
-conf_mat$byClass[c("Sensitivity", "Specificity")]
-
 
 
 #modelo AIC
@@ -137,13 +164,15 @@ roc(bancoAIC$Positivo, predict(modeloStep, type = "response"),
     plot=T,
     print.thres=T)
 
-conf_mat <- confusionMatrix(factor(as.numeric(predict(modeloStep, type = "response")>=0.1)),
+roc(bancoAIC$Positivo, predict(modeloStep, type = "response"),
+    percent=TRUE,
+    col = "red",
+    print.auc = TRUE,
+    plot=T,
+    print.thres=T)$thresholds
+
+
+conf_mat <- confusionMatrix(factor(as.numeric(predict(modeloStep, type = "response")>=0.08531646)),
                             factor(bancoAIC$Positivo), positive = "1")
-conf_mat$table
-conf_mat$byClass[c("Sensitivity", "Specificity")]
-
-
-conf_mat <- confusionMatrix(factor(as.numeric(predict(modelo4, type = "response")>=0.5)),
-                            factor(bancomod4$Positivo), positive = "1")
 conf_mat$table
 conf_mat$byClass[c("Sensitivity", "Specificity")]
