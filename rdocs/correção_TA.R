@@ -4,13 +4,17 @@ pacman::p_load("readxl", "dplyr", "purrr",
                "glue", "ggplot2", "ggpubr",
                "kableExtra", "caret", "pROC",
                "plotROC", "tibble", "reticulate", "glmtoolbox",
-               "survey", "MASS", "caret")
+               "survey", "MASS", "caret", "xlsx")
 
 bancoOriginal <- read_xlsx("banco/df2.xlsx",sheet = 1)%>%
   mutate_all(tolower) %>% 
   filter(`GRUPO MÁSCARA` %in% c(1,2))
 bancoOriginal$`Já foi diagnosticado com COVID-19 mais de uma vez?` <-ifelse(bancoOriginal$`Tem histórico da COVID-19 ou TR (IgG+) positivos?`=="não",
                                                                             "não",bancoOriginal$`Já foi diagnosticado com COVID-19 mais de uma vez?`)
+bancoSalvar <- bancoOriginal
+bancoSalvar$Positivo <- ifelse(bancoSalvar$`Desfecho positivo (Influenza) durante o acompanhamento?` == "não" &
+                                 bancoSalvar$`Desfecho positivo (COVID-19) durante o acompanhamento?` == "não", 0,1)
+write.xlsx(bancoSalvar, "resultados/Imputação.xlsx")
 
 
 banco <- bancoOriginal %>% 
@@ -108,6 +112,8 @@ banco_na <- bancoOriginal %>%
 
 
 predict(modeloStep,banco_na, type = "response")
+as.numeric(predict(modeloStep,banco_na, type = "response")>=0.05065026)
+as.numeric(predict(modelo,banco_na, type = "response")>=0.0666667)
 
 
 #### Ajuste com os NA's negativados ####
