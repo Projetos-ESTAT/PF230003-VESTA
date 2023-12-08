@@ -75,7 +75,7 @@ modeloStep <- glm(Positivo ~. ,family = "binomial", data=bancoAIC)
 summary(modeloStep)
 
 #modelo 4
-bancomod4 <- banco3 %>% select(Positivo,2,11,32) %>% na.omit()
+bancomod4 <- banco3 %>% dplyr::select(Positivo,2,11,32) %>% na.omit()
 modelo4 <- glm(Positivo ~. ,family = "binomial", data=bancomod4)
 summary(modelo4)
 
